@@ -1,9 +1,8 @@
 # ParkingAgent — Autonomous Car Parking with Reinforcement Learning
 
-A Unity ML-Agents project in which a car learns to park itself between two parked cars using **Proximal Policy Optimization (PPO)**.
+A Unity ML-Agents project in which a car learns to park itself between two parked cars using Proximal Policy Optimization.
 
-Author: Kanan Sofiyev (solo project), University of Debrecen
-
+Author: Kanan Sofiyev
 ---
 
 ## Overview
@@ -23,16 +22,16 @@ The agent controls a car in a 3D parking lot. In every episode the car starts at
 
 ## Environment
 
-Each training area (30 m × 30 m) contains:
+Each training area (30 × 30) contains:
 
 - a ground plane surrounded by four walls (tag `Wall`),
 - a green parking spot,
 - two parked cars on both sides of the spot (tag `Obstacle`),
 - the agent car (blue, with a yellow marker on its front).
 
-**Random components:** at the start of every episode the car is placed at a random position in the lower half of the area with a random rotation of ±60°, so the agent cannot memorise a single trajectory.
+**Random components:** at the start of every episode the car is placed at a random position in the lower half of the area with a random rotation of ±60° and because of it the agent cannot memorise a single trajectory.
 
-**Parallel environments:** the scene contains 9 copies of the training area arranged in a 3×3 grid (40 m apart). All 9 agents share one policy and collect experience simultaneously, which speeds up training roughly 9×.
+**Parallel environments:** the scene contains 9 copies of the training area arranged in a 3×3 grid. All 9 agents share one policy and collect experience simultaneously, which speeds up training roughly 9×.
 
 ---
 
@@ -48,9 +47,9 @@ Vector observations (5 values):
 4. dot product of the car's right vector and the spot's forward vector (alignment sign),
 5. current speed / max speed.
 
-Additionally, a **RayPerceptionSensor3D** casts 13 rays over 360° (6 per direction, max 180°, length 15 m) and detects objects tagged `Wall` and `Obstacle`, so the agent can "see" the obstacles around it, including behind the car when reversing.
+Additionally, a **RayPerceptionSensor3D** casts 13 rays over 360° (6 per direction, max 180°, length 15 m) and detects objects tagged `Wall` and `Obstacle`, so the agent can see the obstacles around it, including behind the car if reversing.
 
-### Actions (continuous, 3-dimensional)
+### Actions (3-dimensional)
 
 | Index | Meaning | Range |
 |---|---|---|
@@ -111,7 +110,7 @@ tensorboard --logdir results
 
 ### Baseline (`parking_v5`)
 
-- Mean cumulative reward rose from **−1.0** to about **+3.3** within 600k steps and reached a plateau of **≈3.67** at 2M steps (the theoretical maximum is roughly 3.5–4 depending on the start distance).
+- Mean cumulative reward rose from **−1.0** to about **+3.3** within 600k steps and reached a plateau of **≈3.67** at 2M steps.
 - Mean episode length dropped from ~380 decisions (time-outs) to **~60 decisions**: the agent parks quickly and consistently.
 - Full training (2M steps, 9 parallel areas) took about 27 minutes.
 
@@ -125,7 +124,7 @@ Two additional runs change a single parameter compared to the baseline (1M steps
 | `parking_small` | `car_parking_small.yaml` | smaller network: 2×64 | *to be filled in* |
 | `parking_lr` | `car_parking_lr.yaml` | higher learning rate: 1e-3 | *to be filled in* |
 
-The runs can be compared in TensorBoard by selecting all three in the left panel (Environment/Cumulative Reward).
+The runs can be compared in TensorBoard by selecting all three in the left panel.
 
 ---
 
@@ -146,12 +145,12 @@ pip install mlagents==1.1.0
 
 ### Watch the trained agent
 
-Open `Assets/Scenes/SampleScene`, select the `Car` objects, set **Behavior Parameters → Model** to `Assets/Models/CarParking.onnx` and **Behavior Type** to `Inference Only`, then press Play.
+Open `Assets/Scenes/SampleScene`, select the `Car` objects, set **Behavior Parameters → Model** to `Assets/Models/CarParking.onnx` and **Behavior Type** to Inference Only, then press play.
 
 ### Train from scratch
 
 1. Set **Behavior Type** of all cars to `Default`.
-2. Build the scene (File → Build Profiles → Build) into the `Build` folder.
+2. Build the scene into the `Build` folder.
 3. Run:
 
 ```
@@ -162,7 +161,7 @@ mlagents-learn config/car_parking.yaml --run-id=my_run --env=Build/ParkingAgent.
 
 ### Known issues on Windows
 
-- `TypeError: Invalid first argument to register()` — the old `cattrs` library used by `mlagents` is incompatible with Python ≥ 3.10.2. Fixed by a one-line patch in `venv/Lib/site-packages/cattr/dispatch.py` (register non-class types through function dispatch).
+- `TypeError: Invalid first argument to register()` — the old `cattrs` library used by `mlagents` is incompatible with Python ≥ 3.10.2. Fixed by a one-line patch in `venv/Lib/site-packages/cattr/dispatch.py`.
 - `Expected all tensors to be on the same device` with `--torch-device cpu` — hide the GPU instead with `set CUDA_VISIBLE_DEVICES=-1`.
 - Training inside the Unity 6.6 Editor froze after the first actions were sent, so training was done with a standalone build instead.
 
