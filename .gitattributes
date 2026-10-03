@@ -1,0 +1,10 @@
+# Not Wolfram code: keep these out of the language stats
+*.m linguist-detectable=false
+*.ma linguist-detectable=false
+*.mt linguist-detectable=false
+*.nb linguist-detectable=false
+*.nbp linguist-detectable=false
+*.wl linguist-detectable=false
+*.wlt linguist-detectable=false
+*.cdf linguist-detectable=false
+*.mathematica linguist-detectable=false
