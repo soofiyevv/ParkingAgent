@@ -169,9 +169,9 @@ mlagents-learn config/car_parking.yaml --run-id=my_run --env=Build/ParkingAgent.
 
 ## Lessons learned
 
-- **Exploration matters.** In the first version the brake action was active about half the time under random actions, so the car hardly moved, never got closer to the spot and the reward stayed flat at exactly −1.0. Making the brake activate only above a threshold fixed learning immediately.
-- **Reading the reward numbers helps debugging.** A mean reward of exactly −1.000 with almost zero standard deviation meant every episode was timing out, because the step penalties sum to −1.
-- **Parallel environments** gave a large speed-up: 10k steps took ~75 s with one area and ~8 s with nine.
+- **Exploration matters.** In the version the brake action was active about half the time under random actions. Because of that the car hardly moved. It never got closer, to the target spot. The reward stayed flat at −1.0. Then I changed it so the brake only activates above a threshold. That fixed learning away.
+- **Reading the reward numbers helps debugging.** A mean reward of exactly −1.000 with almost zero standard deviation meant every episode was timing out, because the step penalties sum −1.
+- **Parallel environments** gave a large speed-up, 10k steps took ~75 s with one area and ~8 s with nine.
 
 ---
 
